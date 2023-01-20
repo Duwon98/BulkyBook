@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace BulkyBookWeb.Views.Category
+namespace BulkyBookWeb.Views.Shared
 {
-    public class EditModel : PageModel
+    public class _NotificationModel : PageModel
     {
         public void OnGet()
         {

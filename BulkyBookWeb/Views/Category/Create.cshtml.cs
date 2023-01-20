@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BulkyBookWeb.Views.Category
 {
-    public class EditModel : PageModel
+    public class CreateModel : PageModel
     {
         public void OnGet()
         {
