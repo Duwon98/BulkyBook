@@ -1,4 +1,5 @@
 ﻿using BulkyBook.DataAccess;
+using BulkyBook.DataAccess.Repository.IRepository;
 using BulkyBook.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,16 +7,16 @@ namespace BulkyBookWeb.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ICategoryRepository _db;
 
-        public CategoryController(ApplicationDbContext db)
+        public CategoryController(ICategoryRepository db)
         {
             _db = db;
         }
         public IActionResult Index()
         {
             // var objCategoryList = _db.Categories.ToList();
-            IEnumerable < Category > objCategoryList = _db.Categories;
+            IEnumerable < Category > objCategoryList = _db.GetAll();
             return View(objCategoryList);
         }
 
@@ -36,8 +37,8 @@ namespace BulkyBookWeb.Controllers
             }
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(obj);
-                _db.SaveChanges();
+                _db.Add(obj);
+                _db.Save();
                 TempData["success"] = "Category created successfully";
                 return RedirectToAction("Index");
             }
@@ -52,13 +53,14 @@ namespace BulkyBookWeb.Controllers
             {
                 return NotFound();
             }
-            var categoryFromDb = _db.Categories.Find(id);
-            if(categoryFromDb == null)
+            //var categoryFromDb = _db.Categories.Find(id);
+            var categoryFromDbFirst = _db.GetFirstOrDefault(u => u.Id == id);
+            if(categoryFromDbFirst == null)
             {
                 return NotFound();
             }
 
-            return View(categoryFromDb);
+            return View(categoryFromDbFirst);
         }
 
         //Post
@@ -73,8 +75,8 @@ namespace BulkyBookWeb.Controllers
             if (ModelState.IsValid)
             {
             // It will automatically find the same Id property and update them with given new values. which is pretty cool!
-                _db.Categories.Update(obj);
-                _db.SaveChanges();
+                _db.Update(obj);
+                _db.Save();
                 TempData["success"] = "Category Edited successfully";
                 return RedirectToAction("Index");
             }
@@ -89,14 +91,15 @@ namespace BulkyBookWeb.Controllers
             {
                 return NotFound();
             }
-            var categoryFromDb = _db.Categories.Find(id);
-            if (categoryFromDb == null)
+            //var categoryFromDb = _db.Categories.Find(id);
+            var categoryFromDbFirst = _db.GetFirstOrDefault(u => u.Id == id);
+            if (categoryFromDbFirst == null)
             {
                 return NotFound();
             }
-            _db.Categories.Remove(categoryFromDb);
+            _db.Remove(categoryFromDbFirst);
             TempData["success"] = "Category Deleted successfully";
-            _db.SaveChanges();
+            _db.Save();
 
             return RedirectToAction("Index");
         }
